@@ -15,12 +15,9 @@ def parse_args():
 
 
 def main(args):
-    # ? Data preprocessing
-    X = None
-    y = None
-    X_test = None
 
     # ? Regression + profit prediction
+    # training(args.data, epochs=1000, mode='train')
     training(args.data)
     return
 

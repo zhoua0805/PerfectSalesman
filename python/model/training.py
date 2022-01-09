@@ -16,6 +16,7 @@ def training_helper(device, dataloader, lr, epochs, save_path):
     model = model.to(device)
     loss_fn = nn.MSELoss()
     optimizer = optim.AdamW(model.parameters(), lr=lr)
+    # optimizer = optim.SGD(model.parameters(), lr=lr)
 
     for epoch in range(epochs):
         for data, label in dataloader:
@@ -32,24 +33,44 @@ def training_helper(device, dataloader, lr, epochs, save_path):
     torch.save(model.state_dict(), save_path)
     # model = model.to(torch.device('cpu'))
 
-    return loss.item()
+    return
 
 
-def training(root, epochs=100, batchsize=16, lr=0.001):
+def training(root, epochs=100, batchsize=16, lr=0.001, mode='eval'):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    print(f"Device being used for training: {device}")
+    print(f"Device being used: {device}")
 
-    # ? Dataloaders
     months, data = parse_all(root)
     datasets = [Dataset(X, y) for X, y in data]
-    dataloaders = [DataLoader(
-        dataset, batch_size=batchsize, shuffle=True) for dataset in datasets]
 
-    for i, dataloader in enumerate(dataloaders):
-        month = months[i]
-        print(f"Training loop for month: {month}")
-        loss = training_helper(device, dataloader, lr,
-                               epochs, f"{root}/{month}.pt")
-        print(f"Loss: {loss}")
+    if mode == 'train':
+        # ? Dataloaders for training
+        trainloaders = [DataLoader(
+            dataset, batch_size=batchsize, shuffle=True) for dataset in datasets]
+
+        for i, trainloader in enumerate(trainloaders):
+            month = months[i]
+            print(f"Training loop for month: {month}")
+            training_helper(device, trainloader, lr,
+                            epochs, f"{root}/{month}.pt")
+
+    else:
+        # ? Evaluation
+        valloaders = [DataLoader(
+            dataset, batch_size=len(dataset), shuffle=True) for dataset in datasets]
+        for j, valloader in enumerate(valloaders):
+            month = months[j]
+            print(f"Evaluating month: {month}")
+            model = Model()
+            model.load_state_dict(torch.load(f"{root}/{month}.pt"))
+            model = model.to(device)
+
+            for data, label in valloader:
+                data = data.to(device)
+                label = label.to(device)
+                output = model(data)
+
+                loss = torch.mean(torch.square(label - output), dim=0)
+                print(loss)
 
     return

@@ -18,6 +18,5 @@ def parse_all(root):
     for month in months:
         X, y = parse_csv(f"{root}/{month}.csv")
         data.append((X, y))
-        print(X.shape, y.shape)
 
     return months, data
