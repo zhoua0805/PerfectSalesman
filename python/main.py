@@ -1,6 +1,7 @@
 import argparse
 
 from model.regression import Regression
+from model.training import training
 import dataset.utils as datautils
 
 
@@ -20,9 +21,7 @@ def main(args):
     X_test = None
 
     # ? Regression + profit prediction
-    # model = Regression(X, y, args.noise)
-
-    datautils.parse_all(args.data)
+    training(args.data)
     return
 
 

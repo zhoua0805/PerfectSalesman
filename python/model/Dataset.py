@@ -11,6 +11,6 @@ class Dataset(data.Dataset):
         return len(self.X)
 
     def __getitem__(self, index):
-        X = torch.tensor(self.X[index])
-        y = torch.tensor(self.y[index])
+        X = torch.tensor(self.X[index], dtype=torch.float32)
+        y = torch.tensor(self.y[index], dtype=torch.float32)
         return X, y
