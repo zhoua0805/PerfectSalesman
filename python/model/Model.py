@@ -19,10 +19,10 @@ class Model(nn.Module):
         self.relu = nn.ReLU()
 
     def forward(self, X):
-        X = self.leaky_relu(self.batchNorm_fc1(self.fc1(X)))
-        X = self.leaky_relu(self.batchNorm_fc2(self.fc2(X)))
-        X = self.leaky_relu(self.batchNorm_fc3(self.fc3(X)))
-        X = self.leaky_relu(self.batchNorm_fc4(self.fc4(X)))
+        X = self.leaky_relu(self.fc1(X))
+        X = self.leaky_relu(self.fc2(X))
+        X = self.leaky_relu(self.fc3(X))
+        X = self.leaky_relu(self.fc4(X))
         # X = self.relu(self.fc1(X))
         # X = self.relu(self.fc2(X))
         X = self.relu(self.fc5(X))
