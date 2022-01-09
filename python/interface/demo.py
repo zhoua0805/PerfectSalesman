@@ -13,9 +13,7 @@ def demo():
     months = ['january', 'february', 'march', 'april', 'may', 'june', 
           'july', 'august', 'september', 'october', 'november', 'december' ]
     currentMonth = months[datetime.now().month-1]
-    # TODO: decide path
-    # modelPath = f'/content/{currentMonth}.pt'
-    modelPath = f'/content/december.pt'
+    modelPath = f'../../result/{currentMonth}.pt'
     model = Model()
     model.load_state_dict(torch.load(modelPath, map_location=torch.device('cpu')))
 
