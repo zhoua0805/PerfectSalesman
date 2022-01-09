@@ -37,6 +37,7 @@ def training_helper(device, dataloader, lr, epochs, save_path):
 
 
 def training(root, epochs=100, batchsize=16, lr=0.001, mode='eval'):
+    torch.manual_seed(10)
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print(f"Device being used: {device}")
 
@@ -46,7 +47,7 @@ def training(root, epochs=100, batchsize=16, lr=0.001, mode='eval'):
     if mode == 'train':
         # ? Dataloaders for training
         trainloaders = [DataLoader(
-            dataset, batch_size=batchsize, shuffle=True) for dataset in datasets]
+            dataset, batch_size=batchsize, shuffle=True, drop_last=True) for dataset in datasets]
 
         for i, trainloader in enumerate(trainloaders):
             month = months[i]
@@ -54,10 +55,12 @@ def training(root, epochs=100, batchsize=16, lr=0.001, mode='eval'):
             training_helper(device, trainloader, lr,
                             epochs, f"{root}/{month}.pt")
 
+            break
+
     else:
         # ? Evaluation
         valloaders = [DataLoader(
-            dataset, batch_size=len(dataset), shuffle=True) for dataset in datasets]
+            dataset, batch_size=len(dataset), shuffle=True, drop_last=True) for dataset in datasets]
         for j, valloader in enumerate(valloaders):
             month = months[j]
             print(f"Evaluating month: {month}")
@@ -73,4 +76,5 @@ def training(root, epochs=100, batchsize=16, lr=0.001, mode='eval'):
                 loss = torch.mean(torch.square(label - output), dim=0)
                 print(loss)
 
+            break
     return

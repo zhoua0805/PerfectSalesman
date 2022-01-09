@@ -17,7 +17,7 @@ def parse_args():
 def main(args):
 
     # ? Regression + profit prediction
-    # training(args.data, epochs=1000, mode='train')
+    training(args.data, epochs=500, mode='train')
     training(args.data)
     return
 
